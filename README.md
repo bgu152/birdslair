@@ -11,7 +11,7 @@ The frontend, backend and database are all hosted on an Amazon Lightsail server 
 
 ## Project Setup
 ### Database
-- Create relational database without tables. Must be [supported by Prisma].(https://www.prisma.io/docs/reference/database-reference/supported-databases)
+- Create relational database without tables. Must be [supported by Prisma](https://www.prisma.io/docs/reference/database-reference/supported-databases).
 
 ### Backend
 - Clone the project and run the command **yarn** (or npm) in the root of the server folder.
