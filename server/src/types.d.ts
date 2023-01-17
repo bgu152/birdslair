@@ -1,6 +1,3 @@
-import { StringLiteralType } from "typescript";
-
-
 type Observation = {
     serialNumber: string;
     timestamp: Date;

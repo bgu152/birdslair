@@ -9,12 +9,11 @@ type Pilot = {
     lastViolation: Date;
 };
 
-type Sighting = {
+type Observation = {
     id: string;
-    serialNumber: string;
     timestamp: Date;
     positionY: number;
     positionX: number;
 };
 
-export { Pilot, Sighting};
+export { Pilot, Observation};

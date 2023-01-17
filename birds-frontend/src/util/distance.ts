@@ -1,8 +1,8 @@
-import { Sighting } from '../types';
+import { Observation } from '../types';
 
-export default function distance(sighting: Sighting): number {
-    const x = sighting.positionX / 1000 - 250;
-    const y = sighting.positionY / 1000 - 250;
+export default function distance(observation: Observation): number {
+    const x = observation.positionX / 1000 - 250;
+    const y = observation.positionY / 1000 - 250;
     const d = Math.sqrt(x * x + y * y);
     return d;
 }

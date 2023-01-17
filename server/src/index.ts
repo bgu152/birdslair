@@ -35,7 +35,7 @@ socketIO.on("connection", async (socket) => {
 // Query the drone coordinates API every second and store the data in the database. Also emit the data to the frontend
 cron.schedule("*/1 * * * * *", async () => {
     try {
-        const data:[Observation[], Pilot[]] = await controller();
+        const data = await controller();
         socketIO.emit("data", data);
     } catch (err) {
         console.log("cron error: " + err);

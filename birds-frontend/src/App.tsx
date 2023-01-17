@@ -1,30 +1,31 @@
-
 import { useState, useEffect } from "react";
 import "./styles/reset.css";
 import "./styles/App.css";
 import dateFormatter from "./util/dateFormatter";
 import { io } from "socket.io-client";
-import { Pilot, Sighting } from "./types";
+import { Pilot, Observation } from "./types";
 import Map from "./components/Map";
 import useWindowSize from "./hooks/useWindowSize";
 
 const socket = io(process.env.REACT_APP_BACKEND_URL || "http://localhost:8080");
-// const socket = io("https://www.api.birdslair.com");
 
 function App() {
-    const [data, setData] = useState<[Sighting[],Pilot[]]>([[],[]]);
+
+    const [data, setData] = useState<[Observation[], Pilot[]]>([[], []]);
     const { width } = useWindowSize();
     socket.connect();
 
     function sortCriteria(a: Pilot, b: Pilot) {
-        return new Date(b.lastSeen).getTime() - new Date(a.lastSeen).getTime() || b.lastName.localeCompare(a.lastName);
+        return (
+            new Date(b.lastSeen).getTime() - new Date(a.lastSeen).getTime() ||
+            b.lastName.localeCompare(a.lastName)
+        );
     }
 
     // Check if pilot is in violation now
     function inViolationNow(pilot: Pilot): boolean {
         //Making sure the the pilot has been seen recently, allowing 6s lag
         const recentlySeen = new Date(pilot.lastSeen).getTime() > new Date().getTime() - 1000 * 6;
-        console.log(new Date(pilot.lastSeen).getTime() -( new Date().getTime()));
         return recentlySeen && pilot.lastSeen === pilot.lastViolation;
     }
 
@@ -36,20 +37,20 @@ function App() {
         socket.on("disconnect", () => {
             console.log("disconnected");
         });
+
+        // Listen for data from the backend
         socket.on("data", (data) => {
             setData(data);
+            console.log(data)
         });
         return () => {
-            socket.off("Pilots");
-            socket.off("sightings");
-            socket.off("connect");
+            socket.off("data");
         };
     }, []);
 
     return (
         <div className="pageContainer">
             <h1>Bird Sanctuary Violations </h1>
-
             <main>
                 <article>
                     <h2>Live Drone Map</h2>
@@ -77,7 +78,9 @@ function App() {
                                         </td>
                                         <td>{pilot.email}</td>
                                         <td>{pilot.phoneNumber}</td>
-                                        <td style={{ textAlign: "right" }}>{pilot.closestDistance.toFixed(0)}m</td>
+                                        <td style={{ textAlign: "right" }}>
+                                            {pilot.closestDistance.toFixed(0)}m
+                                        </td>
                                         <td>{dateFormatter(new Date(pilot.lastSeen))}</td>
                                     </tr>
                                 );

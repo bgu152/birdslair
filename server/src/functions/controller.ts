@@ -13,7 +13,7 @@ axiosConf.validateStatus = (status: number) => {
     return (status >= 200 && status < 300) || status == 404;
 };
 
-//Distance between the birdsnest and a drone
+//Distance between the birdnest and a drone
 function distance(observation: Observation): number {
     const x = observation.positionX / 1000 - 250;
     const y = observation.positionY / 1000 - 250;
@@ -21,8 +21,9 @@ function distance(observation: Observation): number {
     return d;
 }
 
-// Uploads pilot data to mariaDB, returns promise with pilot data and latest drone coordinates
-async function Controller(): Promise<[Observation[], Pilot[]]> {
+// Uploads pilot data to mariaDB, returns promise with latest drone observations and all pilot data
+// The observation data will be stripped of any identifying information
+async function Controller(): Promise<[Omit<Observation, "serialNumber">[], Pilot[]]> {
     return new Promise(async (resolve, reject) => {
         try {
             const observations = await getObservations();
@@ -97,7 +98,16 @@ async function Controller(): Promise<[Observation[], Pilot[]]> {
 
             const pilots = await prisma.pilot.findMany();
 
-            resolve([observations, pilots]);
+            // Removing identifying information, i.e. serialNumber, from the observations before sending them to the client
+            const sanitizedObservations: Omit<Observation, "serialNumber">[] = observations.map((observation) => {
+                return {
+                    timestamp: observation.timestamp,
+                    positionX: observation.positionX,
+                    positionY: observation.positionY,
+                };
+            });
+
+            resolve([sanitizedObservations, pilots]);
         } catch (err) {
             console.error(err);
             reject("Controller error");
