@@ -60,7 +60,7 @@ socketIO.on("connection", (socket) => __awaiter(void 0, void 0, void 0, function
         console.log("🦤: A user disconnected");
     });
 }));
-// Query the drone coordinate API every second and store the data in the database. Also emit the data to the frontend
+// Query the drone coordinates API every second and store the data in the database. Also emit the data to the frontend
 node_cron_1.default.schedule("*/1 * * * * *", () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield (0, controller_1.default)();

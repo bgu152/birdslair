@@ -21,7 +21,7 @@ function getObservations() {
             try {
                 const response = yield (0, axios_1.default)("https://assignments.reaktor.com/birdnest/drones");
                 const xmlData = yield response.data;
-                const data = yield (0, xmlTojs_1.default)(xmlData);
+                const data = (0, xmlTojs_1.default)(xmlData);
                 let timestamp = data.report.capture.$.snapshotTimestamp;
                 let date = new Date(timestamp);
                 let arr = data.report.capture.drone;

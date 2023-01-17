@@ -22,14 +22,15 @@ let axiosConf = {};
 axiosConf.validateStatus = (status) => {
     return (status >= 200 && status < 300) || status == 404;
 };
-//Distance between the birdsnest and a drone
+//Distance between the birdnest and a drone
 function distance(observation) {
     const x = observation.positionX / 1000 - 250;
     const y = observation.positionY / 1000 - 250;
     const d = Math.sqrt(x * x + y * y);
     return d;
 }
-// Uploads pilot data to mariaDB, returns promise with pilot data and latest drone coordinates
+// Uploads pilot data to mariaDB, returns promise with latest drone observations and all pilot data
+// The observation data will be stripped of any identifying information
 function Controller() {
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
@@ -49,7 +50,7 @@ function Controller() {
                         continue;
                     }
                     if (pilot) {
-                        // The pilot exists in the database, therefore a recent offender and is stored in the database
+                        // The pilot exists in the database, therefore a recent offender and is updated in the database
                         pilot.lastSeen = observation.timestamp;
                         if (distanceToNest < 100) {
                             pilot.lastViolation = observation.timestamp;
@@ -58,7 +59,7 @@ function Controller() {
                         yield (0, uploadOrUpdatePilot_1.default)(pilot);
                         continue;
                     }
-                    // The pilot does not exist in the database and is in violation of the 100m rule
+                    // If we get here, the pilot does not exist in the database and is in violation of the 100m rule
                     // Fetching pilot data from the pilot API
                     const apiResponse = yield (0, axios_1.default)(`https://assignments.reaktor.com/birdnest/pilots/${observation.serialNumber}`, axiosConf);
                     if (apiResponse.status === 404) {
@@ -95,9 +96,18 @@ function Controller() {
                     }
                 }
                 const pilots = yield prisma.pilot.findMany();
-                resolve([observations, pilots]);
+                // Removing identifying information, i.e. serialNumber, from the observations before sending them to the client
+                const sanitizedObservations = observations.map((observation) => {
+                    return {
+                        timestamp: observation.timestamp,
+                        positionX: observation.positionX,
+                        positionY: observation.positionY,
+                    };
+                });
+                resolve([sanitizedObservations, pilots]);
             }
             catch (err) {
+                console.error(err);
                 reject("Controller error");
             }
         }));

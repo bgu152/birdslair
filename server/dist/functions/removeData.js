@@ -19,8 +19,7 @@ const removeData = () => __awaiter(void 0, void 0, void 0, function* () {
             yield prisma.pilot.deleteMany({
                 where: {
                     lastSeen: {
-                        lt: new Date(Date.now() -
-                            1000 * parseInt(process.env.TIME_LIMIT)),
+                        lt: new Date(Date.now() - 1000 * parseInt(process.env.TIME_LIMIT)),
                     },
                 },
             });
