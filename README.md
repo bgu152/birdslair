@@ -16,7 +16,7 @@ The frontend, backend and database are all hosted on an Amazon Lightsail server 
 ### Backend
 - Clone the project and run the command **yarn** (or npm) in the root of the server folder
 - Create a **.env** file with a variable **DATABASE_URL** whose value is the [connection url](https://www.prisma.io/docs/reference/database-reference/connection-urls) to your database.
-- Add a variable **TIME_LIMIT** to the **.env** file. This represents the duration pilot data is stored in seconds
+- Add a variable **TIME_LIMIT** to the **.env** file. It' value is the duration pilot data is stored in seconds
 - Run the following command to instantiate tables in the database:
 **npx prisma migrate dev --name init**
 - Start the server with **yarn dev**
