@@ -19,7 +19,7 @@ The frontend, backend and database are all hosted on an Amazon Lightsail server 
 - Add a variable TIME_LIMIT to the **.env** file. This represents the duration pilot data is stored in seconds
 - Run the following command to instantiate tables in the database:
 **npx prisma migrate dev --name init**
-- Start server with **yarn dev**
+- Start the server with **yarn dev**
 
 ### Frontend
 - Run the command **yarn** in the root of the **birds-frontend** folder
