@@ -14,7 +14,7 @@ The frontend, backend and database are all hosted on an Amazon Lightsail server 
 - Create relational database without tables. Must be [supported by Prisma](https://www.prisma.io/docs/reference/database-reference/supported-databases).
 
 ### Backend
-- Clone the project and run the command **yarn** (or npm) in the root of the server folder.
+- Clone the project and run the command **yarn** (or use npm if you prefer) in the root of the server folder.
 - Create a **.env** file with a variable **DATABASE_URL** whose value is the [connection url](https://www.prisma.io/docs/reference/database-reference/connection-urls) to your database.
 - Add a variable **TIME_LIMIT** to the **.env** file. It' value is the duration pilot data is stored in seconds.
 - Run the following command to instantiate tables in the database:
