@@ -26,9 +26,13 @@ h2 {
 
 main {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
     grid-gap: 30px;
     overflow-x: auto;
+}
+
+main article:first-child{
+    min-width: 400px;
 }
 
 table {
@@ -49,11 +53,21 @@ th {
     padding-right: 1rem;
 }
 
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 1800px) {
+    main {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media only screen and (max-width: 1250px) {
     .pageContainer {
         margin-left: 0;
         margin-right: 0;
         padding-left: 5%;
         padding-right: 5%;
     }
+    main {
+        grid-template-columns: 1fr;
+    }
 }
+

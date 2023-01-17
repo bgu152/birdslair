@@ -51,7 +51,7 @@ function App() {
             <h1>Bird Sanctuary Violations </h1>
 
             <main>
-                <article style={{ height: `${width ? Math.min(width * 0.9, 400) : 400}` }}>
+                <article>
                     <h2>Live Drone Map</h2>
                     <Map sideLength={width ? Math.min(width * 0.9, 400) : 400} data={data[0]} />
                 </article>
