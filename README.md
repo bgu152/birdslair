@@ -23,5 +23,5 @@ The frontend, backend and database are all hosted on an Amazon Lightsail server 
 
 ### Frontend
 - Run the command **yarn** in the root of the **birds-frontend** folder
-- Create a **.env** file with a variable with the url of the backend called **REACT_APP_BACKEND_URL**
+- Create a **.env** file with a variable backend called **REACT_APP_BACKEND_URL** whose value is the url of the server.
 - Start frontend with **yarn start**
