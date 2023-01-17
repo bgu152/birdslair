@@ -1,0 +1,24 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Pilot{
+  serialNumber String @id
+  firstName String @default("Unknown")
+  lastName String @default("Unknown")
+  phoneNumber String @default("Unknown")
+  email String @default("Unknown")
+  lastSeen DateTime
+  lastViolation DateTime
+  closestDistance Float
+  @@map("pilot")
+}
+
