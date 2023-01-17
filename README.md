@@ -1,7 +1,7 @@
 # Birdnest
 This is a solution to an [assignment](https://assignments.reaktor.com/birdnest/?_gl=1*pr88w8*_ga*MTExMDQ1MDgwNC4xNjczNTk1MjQ3*_ga_DX023XT0SX*MTY3Mzk0MzEyNS45LjEuMTY3Mzk0MzkwNi41Ny4wLjA) which is a part of an application for a summer trainee position at [Reaktor](https://www.reaktor.com/).
 
-## Technologies used
+## Technology stack
 - React
 - Node.js
 - MariaDB
