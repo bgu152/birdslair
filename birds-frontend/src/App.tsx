@@ -10,11 +10,11 @@ import useWindowSize from "./hooks/useWindowSize";
 const socket = io(process.env.REACT_APP_BACKEND_URL || "http://localhost:8080");
 
 function App() {
-
     const [data, setData] = useState<[Observation[], Pilot[]]>([[], []]);
     const { width } = useWindowSize();
     socket.connect();
 
+    // Sort criteria for the table, first by last seen, then by last name
     function sortCriteria(a: Pilot, b: Pilot) {
         return (
             new Date(b.lastSeen).getTime() - new Date(a.lastSeen).getTime() ||
@@ -24,7 +24,7 @@ function App() {
 
     // Check if pilot is in violation now
     function inViolationNow(pilot: Pilot): boolean {
-        //Making sure the the pilot has been seen recently, allowing 6s lag
+        // First check that the pilot really has been seen recently compared to system time
         const recentlySeen = new Date(pilot.lastSeen).getTime() > new Date().getTime() - 1000 * 6;
         return recentlySeen && pilot.lastSeen === pilot.lastViolation;
     }
@@ -41,7 +41,7 @@ function App() {
         // Listen for data from the backend
         socket.on("data", (data) => {
             setData(data);
-            console.log(data)
+            console.log(data);
         });
         return () => {
             socket.off("data");
@@ -50,8 +50,8 @@ function App() {
 
     return (
         <div className="pageContainer">
-            <h1>Bird Sanctuary Violations </h1>
             <main>
+                <h1>Bird Sanctuary Violations </h1>
                 <article>
                     <h2>Live Drone Map</h2>
                     <Map sideLength={width ? Math.min(width * 0.9, 400) : 400} data={data[0]} />
@@ -81,7 +81,7 @@ function App() {
                                         <td style={{ textAlign: "right" }}>
                                             {pilot.closestDistance.toFixed(0)}m
                                         </td>
-                                        <td>{dateFormatter(new Date(pilot.lastSeen))}</td>
+                                        <td>{dateFormatter(pilot.lastSeen)}</td>
                                     </tr>
                                 );
                             })}

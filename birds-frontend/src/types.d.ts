@@ -5,13 +5,12 @@ type Pilot = {
     phoneNumber: string;
     email: string;
     closestDistance: number;
-    lastSeen: Date;
-    lastViolation: Date;
+    lastSeen: string;
+    lastViolation: string;
 };
 
 type Observation = {
-    id: string;
-    timestamp: Date;
+    timestamp: string;
     positionY: number;
     positionX: number;
 };

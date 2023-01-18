@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-//Remove pilot data older than ten minutes from mariaDB database
+//Remove pilot data older than ten minutes from database
 const removeData = async (): Promise<void> => {
     // Remove observations older than 10 minutes
     return new Promise(async (resolve, reject) => {

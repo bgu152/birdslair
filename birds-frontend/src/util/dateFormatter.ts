@@ -1,5 +1,5 @@
-
-export default function dateFormatter(date: Date): string {
+export default function dateFormatter(timestamp: string): string {
+  const date = new Date(timestamp);
   const hours = date.getHours();
   const minutes = date.getMinutes();
   const seconds = date.getSeconds();

@@ -5,6 +5,8 @@ import { Observation } from "../types";
 import distance from "../util/distance";
 import mapImage from "../assets/map.png";
 
+// Based on templates from https://observablehq.com/@d3/zoomable-circle-packing
+
 const MARGIN = { top: 60, right: 60, bottom: 60, left: 60 };
 
 type ScatterplotProps = {
@@ -90,8 +92,7 @@ const Map = ({ sideLength, data }: ScatterplotProps) => {
                     Image created by <a href ="https://openai.com/dall-e-2/">DALL·E 2</a> using the prompt "satellite map of finnish
                     archipelago".
                     <br />
-                    The drone plot is based on a template by {" "}
-                    <a href="https://github.com/holtzy">Yan Holtz</a>.
+                    The drone plot is based on <a href="https://github.com/holtzy/react-graph-gallery/tree/main/viz/ScatterplotHoverHighlight">these templates</a> by Yan Holtz.
                 </i>
             </p>
             <p>

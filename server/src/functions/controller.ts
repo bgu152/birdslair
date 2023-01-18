@@ -1,10 +1,9 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { PrismaClient } from "@prisma/client";
 import { Pilot } from "@prisma/client";
-import { Observation } from "../types";
+import { Observation, SanitizedObservation } from "../types";
 import getObservations from "./getObservations";
 import uploadOrUpdatePilot from "./uploadOrUpdatePilot";
-
 const prisma = new PrismaClient();
 
 // Axios config, allows 404 status codes. Needed because pilot data is not available for all drones
@@ -21,9 +20,9 @@ function distance(observation: Observation): number {
     return d;
 }
 
-// Uploads pilot data to mariaDB, returns promise with latest drone observations and all pilot data
-// The observation data will be stripped of any identifying information
-async function Controller(): Promise<[Omit<Observation, "serialNumber">[], Pilot[]]> {
+// Updates pilot data in the database, returns promise with latest drone observations and all pilot data
+// The drone observation data will be stripped of any identifying information before being sent to the client
+async function controller(): Promise<[SanitizedObservation[], Pilot[]]> {
     return new Promise(async (resolve, reject) => {
         try {
             const observations = await getObservations();
@@ -32,7 +31,7 @@ async function Controller(): Promise<[Omit<Observation, "serialNumber">[], Pilot
             for (let observation of observations) {
                 const distanceToNest = distance(observation);
 
-                // look for pilot in database
+                // look for pilot in database matching the serial number of the drone
                 let pilot: Pilot | null = await prisma.pilot.findUnique({
                     where: {
                         serialNumber: observation.serialNumber,
@@ -45,7 +44,7 @@ async function Controller(): Promise<[Omit<Observation, "serialNumber">[], Pilot
                 }
 
                 if (pilot) {
-                    // The pilot exists in the database, therefore a recent offender and is updated in the database
+                    // The pilot exists in the database, therefore a recent offender and the database needs to be updated
                     pilot.lastSeen = observation.timestamp;
                     if (distanceToNest < 100) {
                         pilot.lastViolation = observation.timestamp;
@@ -56,6 +55,7 @@ async function Controller(): Promise<[Omit<Observation, "serialNumber">[], Pilot
                 }
 
                 // If we get here, the pilot does not exist in the database and is in violation of the 100m rule
+                // We store a new pilot in the database
 
                 // Fetching pilot data from the pilot API
                 const apiResponse = await axios(
@@ -64,7 +64,7 @@ async function Controller(): Promise<[Omit<Observation, "serialNumber">[], Pilot
                 );
 
                 if (apiResponse.status === 404) {
-                    //Pilot API not responding, creating dummy pilot
+                    //Pilot API not supplying pilot info, creating dummy pilot
                     pilot = {
                         serialNumber: observation.serialNumber,
                         firstName: "Unknown",
@@ -96,10 +96,19 @@ async function Controller(): Promise<[Omit<Observation, "serialNumber">[], Pilot
                 }
             }
 
-            const pilots = await prisma.pilot.findMany();
+            // Next we prepare the data to be sent to the client
+
+            // Fetching all pilots that have been seen in the last TIME_LIMIT seconds
+            const pilots = await prisma.pilot.findMany({
+                where:{
+                    lastSeen: {
+                        gt: new Date(Date.now() - 1000 * parseInt(process.env.TIME_LIMIT!))
+                    }
+                }
+            });
 
             // Removing identifying information, i.e. serialNumber, from the observations before sending them to the client
-            const sanitizedObservations: Omit<Observation, "serialNumber">[] = observations.map((observation) => {
+            const sanitizedObservations: SanitizedObservation[] = observations.map((observation) => {
                 return {
                     timestamp: observation.timestamp,
                     positionX: observation.positionX,
@@ -115,4 +124,4 @@ async function Controller(): Promise<[Omit<Observation, "serialNumber">[], Pilot
     });
 }
 
-export default Controller;
+export default controller;

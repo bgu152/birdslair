@@ -1,21 +1,32 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
 
 .pageContainer {
-    padding-top: 20px;
-    margin-left: 200px;
-    margin-right: 200px;
+    padding-top: 60px;
     background-color: #eeeeee;
     font-family: "Poppins", sans-serif;
     padding-left: 5%;
     padding-right: 5%;
     height: 100%;
     padding-bottom: 100vh;
+    display: flex;
+    justify-content: center;
+}
+
+main {
+    display: grid;
+    grid-template-columns: 400px auto;
+    grid-gap: 30px;
+    justify-content: center;
+    gap: 30px;
+    overflow-x: auto;
 }
 
 h1 {
     font-size: 2em;
     font-weight: 800;
     margin-bottom: 10px;
+    grid-column-start: 1;
+    grid-column-end: 3;
 }
 
 h2 {
@@ -24,11 +35,26 @@ h2 {
     margin-bottom: 1.5rem;
 }
 
-main {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 30px;
-    overflow-x: auto;
+img {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+}
+
+.mapContainer {
+    position: relative;
+    max-width: 400px;
+}
+
+.mapSvgContainer {
+    position: absolute;
+}
+
+main article:nth-child(2) {
+    grid-column-start: 1;
+}
+
+main article:nth-child(3) {
+    grid-column-start: 2;
 }
 
 p {
@@ -40,22 +66,7 @@ a {
     text-decoration: none;
 }
 
-img {
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-    border-radius: 10px;
-}
 
-.mapContainer {
-    position: relative;
-}
-
-.mapSvgContainer {
-    position: absolute;
-}
-
-main article:first-child {
-    min-width: 400px;
-}
 
 table {
     text-align: left;
@@ -65,6 +76,7 @@ table {
     border-radius: 10px;
     overflow: hidden;
     font-size: 14px;
+    width: 800px
 }
 
 tr {
@@ -72,12 +84,8 @@ tr {
 }
 
 thead tr {
-    background-color: #4b1768;
+    background-color: #4b3159;
     color: #ffffff;
-}
-
-tbody tr:nth-child(even) {
-    background-color: #f3f3f3;
 }
 
 tbody tr {
@@ -90,25 +98,28 @@ tbody tr:last-of-type {
 
 td,
 th {
-    padding: 12px 15px;
-    padding-right: 1rem;
+    padding: 15px 0 15px 12px;; 
     vertical-align: bottom;
 }
 
-@media only screen and (max-width: 1800px) {
-    main {
-        grid-template-columns: 1fr;
-    }
+thead tr th:first-child {
+    width: 170px;
 }
 
-@media only screen and (max-width: 1250px) {
+thead tr th:nth-child(2) {
+    min-width: 230px;
+}
+thead tr th:nth-child(3) {
+    width: 150px;
+}
+
+@media only screen and (max-width: 1400px) {
+    main {
+        display: block;
+    }
     .pageContainer {
         margin-left: 0;
         margin-right: 0;
-        padding-left: 5%;
-        padding-right: 5%;
-    }
-    main {
-        grid-template-columns: 1fr;
+        padding: 30px 5%;
     }
 }

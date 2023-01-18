@@ -1,6 +1,8 @@
 import { useMemo } from "react";
 import { ScaleLinear } from "d3";
 
+// Based on templates from https://observablehq.com/@d3/zoomable-circle-packing
+
 type AxisBottomProps = {
   xScale: ScaleLinear<number, number>;
   pixelsPerTick: number;

@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
-//Remove pilot data older than ten minutes from mariaDB database
+//Remove pilot data older than ten minutes from database
 const removeData = () => __awaiter(void 0, void 0, void 0, function* () {
     // Remove observations older than 10 minutes
     return new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {

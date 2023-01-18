@@ -7,9 +7,6 @@ import cron from 'node-cron';
 import controller from "./functions/controller";
 import removeData from "./functions/removeData";
 import * as socketio from "socket.io";
-import { Observation } from "./types";
-
-import { Pilot } from "@prisma/client";
 
 const app = express();
 app.use(cors());
@@ -32,22 +29,22 @@ socketIO.on("connection", async (socket) => {
     });
 }); 
 
-// Query the drone coordinates API every second and store the data in the database. Also emit the data to the frontend
+// Query the drone coordinates API every second and store the data in the database. Also data to the frontend
 cron.schedule("*/1 * * * * *", async () => {
     try {
         const data = await controller();
         socketIO.emit("data", data);
     } catch (err) {
-        console.log("cron error: " + err);
+        console.error(err);
     }
 });
 
-// Clean up the database every 10 seconds
+// Clean up the database every 10 seconds removing pilots that have not been seen in TIME_LIMIT seconds
 cron.schedule("*/10 * * * * *", async () => {
     try {
         await removeData();
     } catch (err) {
-        console.log("cron cleanup error: " + err);
+        console.error(err);
     }
 });
 

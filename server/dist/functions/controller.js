@@ -29,7 +29,7 @@ function distance(observation) {
     const d = Math.sqrt(x * x + y * y);
     return d;
 }
-// Uploads pilot data to mariaDB, returns promise with latest drone observations and all pilot data
+// Uploads pilot data to database, returns promise with latest drone observations and all pilot data
 // The observation data will be stripped of any identifying information
 function Controller() {
     return __awaiter(this, void 0, void 0, function* () {

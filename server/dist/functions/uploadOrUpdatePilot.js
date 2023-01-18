@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
-//Uploading or updating the pilot data to mariaDB
+//Uploading or updating the pilot data to database
 function uploadOrUpdatePilot(pilot) {
     return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
         try {
