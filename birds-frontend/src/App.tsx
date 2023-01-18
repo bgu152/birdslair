@@ -41,7 +41,6 @@ function App() {
         // Listen for data from the backend
         socket.on("data", (data) => {
             setData(data);
-            console.log(data);
         });
         return () => {
             socket.off("data");

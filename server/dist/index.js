@@ -60,23 +60,23 @@ socketIO.on("connection", (socket) => __awaiter(void 0, void 0, void 0, function
         console.log("🦤: A user disconnected");
     });
 }));
-// Query the drone coordinates API every second and store the data in the database. Also emit the data to the frontend
+// Query the drone coordinates API every second and store the data in the database. Also data to the frontend
 node_cron_1.default.schedule("*/1 * * * * *", () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield (0, controller_1.default)();
         socketIO.emit("data", data);
     }
     catch (err) {
-        console.log("cron error: " + err);
+        console.error(err);
     }
 }));
-// Clean up the database every 10 seconds
+// Clean up the database every 10 seconds removing pilots that have not been seen in TIME_LIMIT seconds
 node_cron_1.default.schedule("*/10 * * * * *", () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield (0, removeData_1.default)();
     }
     catch (err) {
-        console.log("cron cleanup error: " + err);
+        console.error(err);
     }
 }));
 httpServer.listen("8080", () => {

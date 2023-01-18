@@ -29,17 +29,17 @@ function distance(observation) {
     const d = Math.sqrt(x * x + y * y);
     return d;
 }
-// Uploads pilot data to database, returns promise with latest drone observations and all pilot data
-// The observation data will be stripped of any identifying information
-function Controller() {
+// Updates pilot data in the database, returns promise with latest drone observations and all pilot data
+// The drone observation data will be stripped of any identifying information before being sent to the client
+function controller() {
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const observations = yield (0, getObservations_1.default)();
-                console.log("Observations fetched");
+                // console.log("Observations fetched");
                 for (let observation of observations) {
                     const distanceToNest = distance(observation);
-                    // look for pilot in database
+                    // look for pilot in database matching the serial number of the drone
                     let pilot = yield prisma.pilot.findUnique({
                         where: {
                             serialNumber: observation.serialNumber,
@@ -50,7 +50,7 @@ function Controller() {
                         continue;
                     }
                     if (pilot) {
-                        // The pilot exists in the database, therefore a recent offender and is updated in the database
+                        // The pilot exists in the database, therefore a recent offender and the database needs to be updated
                         pilot.lastSeen = observation.timestamp;
                         if (distanceToNest < 100) {
                             pilot.lastViolation = observation.timestamp;
@@ -60,10 +60,11 @@ function Controller() {
                         continue;
                     }
                     // If we get here, the pilot does not exist in the database and is in violation of the 100m rule
+                    // We store a new pilot in the database
                     // Fetching pilot data from the pilot API
                     const apiResponse = yield (0, axios_1.default)(`https://assignments.reaktor.com/birdnest/pilots/${observation.serialNumber}`, axiosConf);
                     if (apiResponse.status === 404) {
-                        //Pilot API not responding, creating dummy pilot
+                        //Pilot API not supplying pilot info, creating dummy pilot
                         pilot = {
                             serialNumber: observation.serialNumber,
                             firstName: "Unknown",
@@ -95,7 +96,15 @@ function Controller() {
                         yield (0, uploadOrUpdatePilot_1.default)(pilot);
                     }
                 }
-                const pilots = yield prisma.pilot.findMany();
+                // Next we prepare the data to be sent to the client
+                // Fetching all pilots that have been seen in the last TIME_LIMIT seconds
+                const pilots = yield prisma.pilot.findMany({
+                    where: {
+                        lastSeen: {
+                            gt: new Date(Date.now() - 1000 * parseInt(process.env.TIME_LIMIT))
+                        }
+                    }
+                });
                 // Removing identifying information, i.e. serialNumber, from the observations before sending them to the client
                 const sanitizedObservations = observations.map((observation) => {
                     return {
@@ -113,4 +122,4 @@ function Controller() {
         }));
     });
 }
-exports.default = Controller;
+exports.default = controller;
